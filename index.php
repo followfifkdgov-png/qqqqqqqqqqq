@@ -4,8 +4,11 @@
    Redirects to the installer on first run.
    ============================================================ */
 
-$installed = is_file(__DIR__ . '/storage/installed.lock') && is_file(__DIR__ . '/config.php');
-if ($installed && is_file(__DIR__ . '/install.php')) {
+$envConfigured = getenv('DB_HOST') && getenv('DB_NAME') && getenv('DB_USER');
+$installed = $envConfigured || (is_file(__DIR__ . '/storage/installed.lock') && is_file(__DIR__ . '/config.php'));
+if ($envConfigured) {
+    // Serverless (Vercel): config comes from env vars and the installer cannot write files.
+} elseif ($installed && is_file(__DIR__ . '/install.php')) {
     try {
         require_once __DIR__ . '/lib/app.php';
         db();
