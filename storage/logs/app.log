@@ -1,0 +1,1 @@
+[2026-11-08 14:48:41] API error: Xdebug has detected a possible infinite loop, and aborted your script with a stack depth of '512' frames in C:\wamp64\www\austerra-pos-php-mysql\lib\app.php:71

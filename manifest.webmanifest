@@ -1,0 +1,20 @@
+{
+  "name": "Austerra Agri Solutions POS",
+  "short_name": "Austerra POS",
+  "description": "Fast billing, live stock, customers and daily profit for Austerra Agri Solutions. Data is stored securely on your shop server.",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0c0b",
+  "theme_color": "#0a0c0b",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "assets/img/austerra-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

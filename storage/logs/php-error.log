@@ -1,0 +1,29 @@
+[08-Nov-2026 15:32:24 Asia/Colombo] PHP Fatal error:  Uncaught Error: Call to undefined function audit() in C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_run.php:32
+Stack trace:
+#0 C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_run.php(37): find_or_make_item('Coconut Oil', 'ltr', 500.0, 300.0, 2.0)
+#1 {main}
+  thrown in C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_run.php on line 32
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Warning:  session_name(): Session name cannot be changed after headers have already been sent in C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php on line 46
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Stack trace:
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   1. {main}() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:0
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   2. bill_delete($ids = [0 => 'bill_658f5c4ac20774', 1 => 'bill_bfa430ddc1abf4', 2 => 'bill_cee012796c5b44', 3 => 'bill_e48dd141429c11', 4 => 'bill_f1949aeaee2445', 5 => 'bill_fdc8c6cc1a1f48']) C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:14
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   3. audit($action = 'bill.delete', $detail = '6 bill(s)') C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\data.php:760
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   4. current_user() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:219
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   5. start_session() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:95
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   6. session_name($name = 'austerra_pos_sid') C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:46
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed after headers have already been sent in C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php on line 47
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Stack trace:
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   1. {main}() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:0
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   2. bill_delete($ids = [0 => 'bill_658f5c4ac20774', 1 => 'bill_bfa430ddc1abf4', 2 => 'bill_cee012796c5b44', 3 => 'bill_e48dd141429c11', 4 => 'bill_f1949aeaee2445', 5 => 'bill_fdc8c6cc1a1f48']) C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:14
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   3. audit($action = 'bill.delete', $detail = '6 bill(s)') C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\data.php:760
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   4. current_user() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:219
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   5. start_session() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:95
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   6. session_set_cookie_params($lifetime_or_options = ['lifetime' => 0, 'path' => '/', 'httponly' => TRUE, 'secure' => FALSE, 'samesite' => 'Lax']) C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:47
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php on line 54
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP Stack trace:
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   1. {main}() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:0
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   2. bill_delete($ids = [0 => 'bill_658f5c4ac20774', 1 => 'bill_bfa430ddc1abf4', 2 => 'bill_cee012796c5b44', 3 => 'bill_e48dd141429c11', 4 => 'bill_f1949aeaee2445', 5 => 'bill_fdc8c6cc1a1f48']) C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\demo_cleanup.php:14
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   3. audit($action = 'bill.delete', $detail = '6 bill(s)') C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\data.php:760
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   4. current_user() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:219
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   5. start_session() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:95
+[08-Nov-2026 15:33:29 Asia/Colombo] PHP   6. session_start() C:\Users\User\Desktop\mobile app\web application v2\austerra-pos-php-mysql\lib\auth.php:54
