@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.4",
+      "excludeFiles": "{storage/logs/**,.git/**,README-PHP.md,SETUP-SINHALA.md}"
+    }
+  },
+  "routes": [
+    { "src": "/(config\\.php|config\\.sample\\.php|qa_readd_temp\\.php)", "status": 404 },
+    { "src": "/(lib|sql|storage|api)/.*", "status": 404 },
+    { "src": "/(index\\.php|api\\.php|install\\.php)?", "dest": "/api/index.php" },
+    { "src": "/.*\\.php", "status": 404 },
+    { "handle": "filesystem" },
+    { "src": "/.*", "status": 404 }
+  ]
+}

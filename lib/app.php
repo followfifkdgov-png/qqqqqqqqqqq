@@ -28,11 +28,32 @@ function app_config()
     }
 
     $file = APP_ROOT . '/config.php';
-    if (!is_file($file)) {
+    if (env_db_configured()) {
+        $config = is_file($file) ? require $file : array();
+        if (!is_array($config)) {
+            $config = array();
+        }
+        $config['db'] = array(
+            'host' => getenv('DB_HOST'),
+            'port' => getenv('DB_PORT') ? (int) getenv('DB_PORT') : 3306,
+            'name' => getenv('DB_NAME'),
+            'user' => getenv('DB_USER'),
+            'pass' => (string) getenv('DB_PASS'),
+            'ssl'  => getenv('DB_SSL') === '1' || strtolower((string) getenv('DB_SSL')) === 'true',
+        );
+        if (empty($config['app'])) {
+            $config['app'] = array(
+                'timezone' => 'Asia/Colombo',
+                'db_timezone' => '+05:30',
+                'session_name' => 'austerra_pos_sid',
+                'name' => 'Austerra Agri Solutions POS',
+            );
+        }
+    } elseif (!is_file($file)) {
         throw new ApiException('The application is not installed yet. Open install.php in your browser.', 503);
+    } else {
+        $config = require $file;
     }
-
-    $config = require $file;
     if (!is_array($config) || empty($config['db']['name'])) {
         throw new ApiException('config.php is incomplete. Check your database settings.', 503);
     }
@@ -43,13 +64,35 @@ function app_config()
     error_reporting(E_ALL);
     ini_set('display_errors', '0');
     ini_set('log_errors', '1');
-    $logDir = APP_ROOT . '/storage/logs';
-    if (is_dir($logDir) && is_writable($logDir)) {
+    $logDir = app_log_dir();
+    if ($logDir !== null) {
         ini_set('error_log', $logDir . '/php-error.log');
     }
 
     $GLOBALS['APP_CONFIG'] = $config;
     return $config;
+}
+
+/* Serverless hosts (Vercel) have no config.php written by the installer, so
+   database credentials come from environment variables instead. */
+function env_db_configured()
+{
+    return getenv('DB_HOST') && getenv('DB_NAME') && getenv('DB_USER');
+}
+
+function is_serverless()
+{
+    return (bool) getenv('VERCEL');
+}
+
+function app_log_dir()
+{
+    $dir = APP_ROOT . '/storage/logs';
+    if (is_dir($dir) && is_writable($dir)) {
+        return $dir;
+    }
+    $tmp = sys_get_temp_dir();
+    return ($tmp && is_writable($tmp)) ? $tmp : null;
 }
 
 function cfg($key, $default = null)
@@ -81,6 +124,15 @@ function db()
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES   => false,
     );
+
+    if (!empty($db['ssl']) && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+        foreach (array('/etc/pki/tls/certs/ca-bundle.crt', '/etc/ssl/certs/ca-certificates.crt', '/etc/ssl/cert.pem') as $ca) {
+            if (is_file($ca)) {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = $ca;
+                break;
+            }
+        }
+    }
 
     $connect = function ($p) use ($db, $options) {
         $dsn = 'mysql:host=' . $db['host'] . ($p ? ';port=' . $p : '') . ';dbname=' . $db['name'] . ';charset=utf8mb4';
@@ -359,8 +411,8 @@ function fmt_qty($n)
 
 function app_log($message)
 {
-    $dir = APP_ROOT . '/storage/logs';
-    if (!is_dir($dir)) {
+    $dir = app_log_dir();
+    if ($dir === null) {
         return;
     }
     $line = '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
@@ -369,6 +421,9 @@ function app_log($message)
 
 function is_installed()
 {
+    if (env_db_configured()) {
+        return true;
+    }
     return is_file(APP_ROOT . '/storage/installed.lock') && is_file(APP_ROOT . '/config.php');
 }
 

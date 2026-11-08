@@ -27,6 +27,59 @@ function is_https()
     return false;
 }
 
+class DbSessionHandler implements SessionHandlerInterface
+{
+    private $pdo;
+
+    public function __construct($pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function open($path, $name): bool
+    {
+        $this->pdo->exec('CREATE TABLE IF NOT EXISTS `php_sessions` (
+            `id` VARCHAR(128) NOT NULL PRIMARY KEY,
+            `data` MEDIUMTEXT NOT NULL,
+            `updated_at` INT UNSIGNED NOT NULL,
+            KEY `idx_updated` (`updated_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        return true;
+    }
+
+    public function close(): bool
+    {
+        return true;
+    }
+
+    public function read($id): string|false
+    {
+        $stmt = $this->pdo->prepare('SELECT data FROM php_sessions WHERE id = ? AND updated_at > ?');
+        $stmt->execute(array($id, time() - SESSION_IDLE_SECONDS));
+        $row = $stmt->fetch();
+        return $row ? (string) $row['data'] : '';
+    }
+
+    public function write($id, $data): bool
+    {
+        $stmt = $this->pdo->prepare('REPLACE INTO php_sessions (id, data, updated_at) VALUES (?, ?, ?)');
+        return $stmt->execute(array($id, $data, time()));
+    }
+
+    public function destroy($id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM php_sessions WHERE id = ?');
+        return $stmt->execute(array($id));
+    }
+
+    public function gc($max_lifetime): int|false
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM php_sessions WHERE updated_at < ?');
+        $stmt->execute(array(time() - SESSION_IDLE_SECONDS));
+        return $stmt->rowCount();
+    }
+}
+
 function start_session()
 {
     if (session_status() === PHP_SESSION_ACTIVE) {
@@ -53,6 +106,11 @@ function start_session()
             'secure'   => is_https(),
             'samesite' => 'Lax',
         ));
+    }
+
+    if (is_serverless() && !headers_sent()) {
+        // Each Vercel function instance has its own /tmp, so file sessions get lost between requests.
+        session_set_save_handler(new DbSessionHandler(db()), true);
     }
 
     if (session_status() !== PHP_SESSION_ACTIVE) {
